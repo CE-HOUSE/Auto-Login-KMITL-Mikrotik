@@ -155,6 +155,17 @@ global CheckConnection;
 global UnloadUtil; $UnloadUtil;
 };
 
+############################# remove old variable #############################
+# spell-checker:ignore Lcheck Lhearbeat Linit Llogin
+global LcheckConnection; set LcheckConnection;
+global Lhearbeat; set Lhearbeat;
+global Linit; set Linit;
+global Llogin; set Llogin;
+global LloginLoop; set LloginLoop;
+global loginServer; set loginServer;
+global JSONUnload; $JSONUnload; set JSONUnload;
+
+
 ############################### setup new script ##############################
 # spell-checker:ignore dont abcdefghijklmnopqrstuvwxyz inkey
 :if ([/system script find name="AutoLogin-Config"] = "") do={
