@@ -1,0 +1,53 @@
+/system script
+add name=ping-and-post source={
+  :local pingTarget "8.8.8.8"
+  :local postURL "https://portal.kmitl.ac.th:19008/portalauth/login"
+
+  :local userName [input "Enter username:"]
+  :local userPass [password "Enter password:"]
+  :local ipAddress [input "Enter IP address:"]
+  
+  :local requestBody "userName=$userName&userPass=$userPass&uaddress=$ipAddress&umac=7486e2507746&agreed=1&acip=10.252.13.10&authType=1"
+
+  :local sendPostRequest do={
+    /tool fetch mode=http url=$postURL http-method=post http-data=$requestBody
+    :log info "POST request sent to $postURL"
+  }
+
+  :local parseJSON do={
+    :local response [:toarray [:parse [:tonum [:pick $response 1]]]]
+  }
+
+  :local retryCount 0
+  :local maxRetry 3
+
+  :while ($retryCount < $maxRetry) do={
+    :if ([ping $pingTarget count=3] = 0) do={
+      :log warning "Ping to $pingTarget failed. Sending POST request (Retry $retryCount)..."
+      :local response ($sendPostRequest)
+      $parseJSON
+      :local success [:pick ($response->"success") 1]
+      :if ($success = "false") do={
+        :log warning "POST request unsuccessful. Retrying..."
+        :delay 1s
+        :set retryCount ($retryCount + 1)
+      } else={
+        :log info "POST request successful."
+        :break
+      }
+    } else={
+      :log info "Ping to $pingTarget successful."
+      :break
+    }
+  }
+  :if ($retryCount = $maxRetry) do={
+    :log error "Max retries reached. POST request still unsuccessful."
+  }
+}
+
+/system script set ping-and-post start-with-router=yes
+
+/system scheduler
+add interval=10h name=ping-and-post-scheduler \
+on-event="/system script run ping-and-post"
+/system scheduler set ping-and-post-scheduler start-with-router=yes
