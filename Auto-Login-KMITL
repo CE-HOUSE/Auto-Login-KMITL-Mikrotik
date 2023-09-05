@@ -1,22 +1,13 @@
 /system script
 add name=ping-and-post source={
   :local pingTarget "8.8.8.8"
-  :local postURL "https://portal.kmitl.ac.th:19008/portalauth/login"
+  :local postURL "<your_post_url>"
 
   :local userName [input "Enter username:"]
   :local userPass [input "Enter password:"]
   :local ipAddress [input "Enter IP address:"]
   
-  :local userPassHidden ""
-  :local userPassLength [:len $userPass]
-  :local i 0
-
-  :while ($i < $userPassLength) do={
-    :set userPassHidden ($userPassHidden . "*")
-    :set i ($i + 1)
-  }
-
-  :local requestBody "userName=$userName&userPass=$userPassHidden&uaddress=$ipAddress&umac=7486e2507746&agreed=1&acip=10.252.13.10&authType=1"
+  :local requestBody "userName=$userName&userPass=$userPass&uaddress=$ipAddress&umac=7486e2507746&agreed=1&acip=10.252.13.10&authType=1"
 
   :local sendPostRequest do={
     /tool fetch mode=http url=$postURL http-method=post http-data=$requestBody
