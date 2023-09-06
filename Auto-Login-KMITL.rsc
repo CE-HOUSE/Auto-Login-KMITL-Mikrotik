@@ -137,7 +137,7 @@ global UnloadUtil; $UnloadUtil;
 :if ([/system scheduler find name="AutoLogin-AutoReLogin"] = "") do={
   /system scheduler add name="AutoLogin-AutoReLogin";
 }
-/system scheduler set "AutoLogin-AutoReLogin" interval=[:totime "0h15m00s"] policy=policy,read,test,write on-event={
+/system scheduler set "AutoLogin-AutoReLogin" interval=[:totime "09h00m00s"] policy=policy,read,test,write on-event={
 :log debug "Auto-Login: Will check connection and re-login when login session timeout...";
 /system script run "AutoLogin-Utility";
 global CheckConnection;
@@ -164,6 +164,22 @@ global CheckConnection;
 
 /system script run "AutoLogin-Login";
 global UnloadUtil; $UnloadUtil;
+};
+
+############################ Heartbeat scheduler ############################
+
+:if ([/system scheduler find name="AutoLogin-Heartbeat"] = "") do={
+  /system scheduler add name="AutoLogin-Heartbeat";
+}
+/system scheduler set "AutoLogin-Heartbeat" interval=[:totime "0h5m00s"] policy=policy,read,test,write on-event={
+:log debug "Auto-Login: Will check connection and re-login when login session timeout...";
+/system script run "AutoLogin-Utility";
+global CheckConnection;
+:local internet [$CheckConnection];
+:if ($internet = "noInternet") do={
+    /system script run "AutoLogin-Login";
+    global UnloadUtil; $UnloadUtil;
+}
 };
 
 
