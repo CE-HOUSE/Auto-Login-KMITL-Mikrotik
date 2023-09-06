@@ -137,7 +137,7 @@ global UnloadUtil; $UnloadUtil;
 :if ([/system scheduler find name="AutoLogin-AutoReLogin"] = "") do={
   /system scheduler add name="AutoLogin-AutoReLogin";
 }
-/system scheduler set "AutoLogin-AutoReLogin" interval=[:totime "9h59m55s"] policy=policy,read,test,write on-event={
+/system scheduler set "AutoLogin-AutoReLogin" interval=[:totime "0h15m00s"] policy=policy,read,test,write on-event={
 :log debug "Auto-Login: Will check connection and re-login when login session timeout...";
 /system script run "AutoLogin-Utility";
 global CheckConnection;
