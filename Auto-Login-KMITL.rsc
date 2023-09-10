@@ -166,20 +166,44 @@ global CheckConnection;
 global UnloadUtil; $UnloadUtil;
 };
 
-############################ Heartbeat scheduler ############################
-
+############################# Heartbeat scheduler #############################
+:if ([/system scheduler find name="AutoLogin-Hearbeat"] != "") do={
+  /system scheduler set "AutoLogin-Hearbeat" name="AutoLogin-Heartbeat";
+}
 :if ([/system scheduler find name="AutoLogin-Heartbeat"] = "") do={
   /system scheduler add name="AutoLogin-Heartbeat";
 }
-/system scheduler set "AutoLogin-Heartbeat" interval=[:totime "0h5m00s"] policy=policy,read,test,write on-event={
-:log debug "Auto-Login: Will check connection and re-login when login session timeout...";
+/system scheduler set "AutoLogin-Heartbeat" interval=[:totime "0h01m00s"] policy=policy,read,test,write on-event={
 /system script run "AutoLogin-Utility";
-global CheckConnection;
-:local internet [$CheckConnection];
-:if ($internet = "noInternet") do={
-    /system script run "AutoLogin-Login";
-    global UnloadUtil; $UnloadUtil;
+global CheckConnection; global ParseJSON;
+:if ([$CheckConnection] = "notLogin") do={
+  :log warning "Auto-Login: Lost Connection, Retry login...";
+  /system script run "AutoLogin-Login";
+} else={
+    :local config [:parse (":return {" . [/system script get AutoLogin-Config source] . "};")]
+    :local account [$config];
+    
+    :local url "https://nani.csc.kmitl.ac.th/network-api/data/";
+    :local data "username=$($account->"username")&os=Chrome v116.0.5845.141 on Windows 10 64-bit&speed=1.29&newauth=1";
+
+    :local content ([/tool fetch http-method=post http-data=$data url=$url host="portal.kmitl.ac.th:19008" dst-path=("response.txt")]);
+    
+    # Get the HTTP response code from the response file
+    :local responseCode [/file get response.txt http-status]
+
+    # Check if the response code is 200 (OK)
+    :if ($responseCode = 200) do={
+      :log info "Auto-Login: HeartBeat OK...";
+    } else={
+      :log error "Auto-Login: HeartBeat ERROR...";
+      /system script run "AutoLogin-Login";
+    }
+
+    # Delete the response file
+    /file remove response.txt
 }
+
+global UnloadUtil; $UnloadUtil;
 };
 
 
