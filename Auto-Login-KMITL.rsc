@@ -184,15 +184,12 @@ global CheckConnection; global ParseJSON;
     :local account [$config];
     
     :local url "https://nani.csc.kmitl.ac.th/network-api/data/";
-    :local data "username=$($account->"username")&os=Chrome v116.0.5845.141 on Windows 10 64-bit&speed=1.29&newauth=1";
+    :local data "username=64010899&os=Chrome v116.0.5845.141 on Windows 10 64-bit&speed=1.29&newauth=1";
 
-    :local content ([/tool fetch http-method=post http-data=$data url=$url host="portal.kmitl.ac.th:19008" dst-path=("response.txt")]);
+    :local content ([/tool fetch http-method=post http-data=$data url=$url host="nani.csc.kmitl.ac.th" as-value output=user]->"status");
     
-    # Get the HTTP response code from the response file
-    :local responseCode [/file get response.txt http-status]
-
-    # Check if the response code is 200 (OK)
-    :if ($responseCode = 200) do={
+   
+    :if ($content = "finished") do={
       :log info "Auto-Login: HeartBeat OK...";
     } else={
       :log error "Auto-Login: HeartBeat ERROR...";
