@@ -2,6 +2,9 @@
 
 A **_Mikrotik script_** that let you automatically authenticate into KMITL network
 
+| :warning: **Disclaimer:** This project is only an experiment on KMITL authentication system and it does not provided a bypass for login system |
+| --- |
+
 ## Getting started
 
 ### Prerequisites
@@ -11,14 +14,14 @@ A **_Mikrotik script_** that let you automatically authenticate into KMITL netwo
 ### Installation & Upgrade
 
 1. Login into Mikrotik and open new terminal
-2. Copy and Pase this script (If use terminal in winbox **Don't use Ctrl-V**, use right click and pase)
+2. Copy and Paste this script (If use terminal in winbox **Don't use Ctrl-V**, use right click and paste)
 
 ```
 /tool fetch url=https://raw.githubusercontent.com/CE-HOUSE/Auto-Login-KMITL-Mikrotik/main/Auto-Login-KMITL.rsc;
 /import file-name=Auto-Login-KMITL.rsc;
 ```
 
-3. If first time install, this script will ask for username and password in terminal.
+3. If first time install, this script will ask for username and password in terminal. If it not or face the problem like [this](https://github.com/CE-HOUSE/Auto-Login-KMITL-Mikrotik/issues/1), try delete old scripts and scheduler (system > scripts, system > scheduler).
 
 ### Usage
 
@@ -50,9 +53,5 @@ You **can not** change Heartbeat interval, it will use value form authen server.
 - **_[NetCat](https://eternallybored.org/misc/netcat/)_** for tool to simulate as authen server
 
 ## Team
-
-- only me
-
-## Disclaimer
-
-This project is only an experiment on KMITL authentication system and it does not provided a bypass for login system
+- [@ouoam](https://github.com/ouoam)
+- [@CE-HOUSE](https://github.com/CE-HOUSE)
