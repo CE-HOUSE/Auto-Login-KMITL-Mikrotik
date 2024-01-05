@@ -9,7 +9,7 @@ A **_Mikrotik script_** that let you automatically authenticate into KMITL netwo
 
 ### Prerequisites
 
-- Mikrotik RouterOS v.7.10.2 ✅
+- Mikrotik RouterOS v.7.12.1 ✅
 
 ### Installation & Upgrade
 
