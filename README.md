@@ -54,4 +54,5 @@ You **can not** change Heartbeat interval, it will use value form authen server.
 
 ## Team
 - [@ouoam](https://github.com/ouoam)
+- [@BarwSirati](https://github.com/BarwSirati)
 - [@CE-HOUSE](https://github.com/CE-HOUSE)
