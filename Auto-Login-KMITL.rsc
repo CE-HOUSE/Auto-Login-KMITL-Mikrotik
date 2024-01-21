@@ -19,6 +19,7 @@ if (!any $ParseJSON) do={
 :local config [:parse (":return {" . [/system script get AutoLogin-Config source] . "};")]
 :local account [$config];
 :local serverIP;
+:local umac [/interface ethernet get [/interface ethernet find default-name=ether1] mac-address]; :put ([:pick $mac 0 2] . [:pick $mac 3 5] . [:pick $mac 6 8] . [:pick $mac 9 11] . [:pick $mac 12 14]. [:pick $mac 15 17])
 # https://portal.kmitl.ac.th:19008/portalauth/login
 :do {
   :set serverIP [:resolve portal.kmitl.ac.th];
@@ -26,7 +27,7 @@ if (!any $ParseJSON) do={
   # when use DoH and not login yet, will no dns record in cache and can not query new
   :set serverIP [:resolve server=1.1.1.1 portal.kmitl.ac.th];
 }
-:local data "userName=$($account->"username")&userPass=$($account->"password")&uaddress=$($account->"ipaddress")&umac=7486e2507746&agreed=1&acip=10.252.13.10&authType=1";
+:local data "userName=$($account->"username")&userPass=$($account->"password")&uaddress=$($account->"ipaddress")&umac=$($umac)&agreed=1&acip=10.252.13.10&authType=1";
 :local url "https://portal.kmitl.ac.th:19008/portalauth/login";
 :local content ([/tool fetch http-method=post http-data=$data url=$url host="portal.kmitl.ac.th:19008" as-value output=user]->"data");
 
